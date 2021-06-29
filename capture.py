@@ -6,12 +6,12 @@ import wave
 import webrtcvad
 from halo import Halo
 from scipy import signal
-import transcribe
-import translate
 import websockets
 import asyncio
 import traceback
-import punctuate
+# import transcribe
+# import translate
+# import punctuate
 
 logging.basicConfig(level=20)
 
@@ -89,6 +89,7 @@ class Audio(object):
                              input_rate=self.input_rate)
 
     async def read(self):
+        # print("Heeee")
         """Return a block of audio data, blocking if necessary."""
         return await self.buffer_queue.get()
 
@@ -175,47 +176,58 @@ def main(vad_aggressiveness, vad_device, vad_rate, source_lang, target_lang):
                          input_rate=vad_rate)
     print("Listening (ctrl-C to exit)...")
 
-    async def translator():
-        frames = vad_audio.vad_collector()
-        # Stream from microphone to DeepSpeech using VAD
-        # while True:
-        #     yield await frames.__anext__()
-        spinner = Halo(spinner='line')
-        wav_data = bytearray()
-        async for frame in frames:
-            if frame is not None:
-                spinner.start()
-                wav_data.extend(frame)
-            else:
-                spinner.stop()
-                vad_file = os.path.join(os.path.dirname(__file__), "process.wav")
-                vad_audio.write_wav(vad_file, wav_data)
-                wav_data = bytearray()
-                text = transcribe.transcribe(vad_file)
-                punctuated = punctuate.punctuate(text.lower())
-                print("Recognized: %s" % punctuated)
-                yield punctuated
-                translation = translate.translate(punctuated, source_lang, target_lang)
-                print("Translation: %s" % translation)
-                yield translation
-                os.remove(vad_file)
-
-    async def send_result(websocket, path):
-        result = translator()
-        async for msg in result:
-            try:
-                # print(type(msg))
-                await websocket.send("_"+msg)
-                # await websocket.send("hi")
-            except Exception:
-                traceback.print_exc()
+    # async def translator():
+    #     frames = vad_audio.vad_collector()
+    #     print(frames)
+    #     # Stream from microphone to DeepSpeech using VAD
+    #     # while True:
+    #     #     yield await frames.__anext__()
+    #     spinner = Halo(spinner='line')
+    #     wav_data = bytearray()
+    #     async for frame in frames:
+    #         if frame is not None:
+    #             spinner.start()
+    #             wav_data.extend(frame)
+    #         else:
+    #             spinner.stop()
+    #             vad_file = os.path.join(os.path.dirname(__file__), "process.wav")
+    #             vad_audio.write_wav(vad_file, wav_data)
+    #             wav_data = bytearray()
+    #             text = transcribe.transcribe(vad_file)
+    #             punctuated = punctuate.punctuate(text.lower())
+    #             print("Recognized: %s" % punctuated)
+    #             yield punctuated
+    #             translation = translate.translate(punctuated, source_lang, target_lang)
+    #             print("Translation: %s" % translation)
+    #             yield translation
+    #             os.remove(vad_file)
+    # #
+    # async def send_result(websocket, path):
+    #     result = translator()
+    #     async for msg in result:
+    #         try:
+    #             # print(type(msg))
+    #             await websocket.send("_"+msg)
+    #             # await websocket.send("hi")
+    #         except Exception:
+    #             traceback.print_exc()
 
     # async def test():
     #     result = translator()
     #     async for msg in result:
     #         print(msg)
 
-    asyncio.get_event_loop().run_until_complete(websockets.serve(send_result, 'localhost', 8765))
+    async def test2():
+        frames = vad_audio.vad_collector()
+        print(frames)
+        async for frame in frames:
+            if frame is not None:
+                print(frame)
+    asyncio.get_event_loop().run_until_complete(test2())
+
+    ##To connect with Neos websockets
+    # asyncio.get_event_loop().run_until_complete(websockets.serve(send_result, 'localhost', 8765))
+
     # asyncio.get_event_loop().run_until_complete(test())
     asyncio.get_event_loop().run_forever()
     # translator()
