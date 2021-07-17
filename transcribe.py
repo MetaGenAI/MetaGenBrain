@@ -5,6 +5,7 @@ from transformers import Wav2Vec2ForCTC, Wav2Vec2Tokenizer
 import os
 import speech_recognition as sr
 from pathlib import Path
+import asyncio
 
 # load pretrained model
 print("Loading STT model...")
@@ -41,7 +42,8 @@ async def transcribe_tokenizer_folder(target_folder):
                 yield new_file
         except:
             pass
-        yield None
+        # yield None
+        await asyncio.sleep(0.1)
 
 
 # transcribe audio using 'tokenizer' in this case Wav2Vec
