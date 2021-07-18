@@ -35,10 +35,10 @@ def transcribe_tokenizer(sound_file):
 async def transcribe_tokenizer_folder(target_folder):
     #check which WAV files are in the folder
     while True:
-        files = sorted(Path(target_folder).glob("*voice_tmp*.wav"), key=os.path.getmtime, reverse=False)
+        files = sorted(Path(target_folder).glob("*voice_ready*.wav"), key=os.path.getmtime, reverse=False)
         try:
             for file in files:
-                new_file = str(file).replace("voice_tmp","voice")
+                new_file = str(file).replace("voice_ready","voice")
                 os.rename(file,new_file)
                 yield new_file
         except:

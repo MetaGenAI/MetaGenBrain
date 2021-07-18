@@ -27,7 +27,7 @@ def make_iter():
     return queue, put
 
 def main(source_lang, target_lang):
-    #folder = "C:/Program Files (x86)/Steam/steamapps/common/NeosVR/data/tmp/"
+    # folder = "C:/Program Files (x86)/Steam/steamapps/common/NeosVR/data/tmp/"
     folder = "/home/guillefix/.steam/steamapps/common/NeosVR/data/tmp/"
     # Start audio with VAD
     async def translator():
