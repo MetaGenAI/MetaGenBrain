@@ -1,0 +1,7 @@
+webrtcvad
+halo
+websockets
+soundfile
+librosa
+transformers
+SpeechRecognition
