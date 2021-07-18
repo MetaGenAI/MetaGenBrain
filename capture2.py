@@ -39,7 +39,8 @@ def main(source_lang, target_lang):
             try:
                 text = transcribe.transcribe_google(file)
                 yield text
-            except:
+            except Exception as e:
+                print(e)
                 yield ""
             # punctuated = punctuate.punctuate(text.lower())
             # print("Recognized: %s" % punctuated)
