@@ -7,11 +7,6 @@ import speech_recognition as sr
 from pathlib import Path
 import asyncio
 
-# load pretrained model
-print("Loading STT model...")
-tokenizer = Wav2Vec2Tokenizer.from_pretrained("facebook/wav2vec2-large-960h-lv60-self")
-model = Wav2Vec2ForCTC.from_pretrained("facebook/wav2vec2-large-960h-lv60-self")
-print("STT model loaded.")
 
 # transcribe audio using 'tokenizer' in this case Wav2Vec
 def transcribe_tokenizer(sound_file):
@@ -30,6 +25,12 @@ def transcribe_tokenizer(sound_file):
 # sound_file = "C:/Program Files (x86)/Steam/steamapps/common/NeosVR/data/tmp/ID2C00_voice_tmp_b11162cd-756d-404e-846b-c0783c95676f.wav"
 # transcribe_tokenizer(sound_file)
 
+# load pretrained model
+# print("Loading STT model...")
+# tokenizer = Wav2Vec2Tokenizer.from_pretrained("facebook/wav2vec2-large-960h-lv60-self")
+# model = Wav2Vec2ForCTC.from_pretrained("facebook/wav2vec2-large-960h-lv60-self")
+# print("STT model loaded.")
+
 # transcribe WAV files into folders for each user within a folder: "transcripts"
 async def transcribe_tokenizer_folder(target_folder):
     #check which WAV files are in the folder
@@ -42,8 +43,8 @@ async def transcribe_tokenizer_folder(target_folder):
                 yield new_file
         except:
             pass
-        # yield None
         await asyncio.sleep(0.1)
+        # yield None
 
 
 # transcribe audio using 'tokenizer' in this case Wav2Vec

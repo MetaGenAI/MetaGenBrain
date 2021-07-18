@@ -11,9 +11,13 @@ import asyncio
 import traceback
 import transcribe
 # import translate
-import punctuate
+# import punctuate
 
 logging.basicConfig(level=20)
+
+logger = logging.getLogger('websockets')
+logger.setLevel(logging.INFO)
+logger.addHandler(logging.StreamHandler())
 
 def make_iter():
     loop = asyncio.get_event_loop()
@@ -29,10 +33,19 @@ def main(source_lang, target_lang):
             # naming convention - ID2C00_voice_tmp_[guid].wav
             # if file is not None:
             # username = str(file).split("_voice_")[0]
-            text = transcribe.transcribe_tokenizer(file)
-            punctuated = punctuate.punctuate(text.lower())
+            # text = transcribe.transcribe_tokenizer(file)
+            try:
+                text = transcribe.transcribe_google(file)
+                yield text
+            except:
+                yield ""
+            # punctuated = punctuate.punctuate(text.lower())
             # print("Recognized: %s" % punctuated)
-            yield punctuated
+            # if text is None:
+            #     yield "hi"
+            # else:
+            #     yield text
+            # yield punctuated
             # yield "hi"
             # translation = translate.translate(punctuated, source_lang, target_lang)
             # translation = punctuated
@@ -55,26 +68,28 @@ def main(source_lang, target_lang):
         print("HOOO")
         result = translator()
         # result = test_generator2()
-        # async for msg in result:
-        #     try:
-        #         await websocket.send(msg)
-        #         print("oooooo")
-        #         print(msg)
-        #         # await websocket.send("hi")
-        #         # await asyncio.sleep(1)
-        #     except Exception as e:
-        #         print(e)
-        #         traceback.print_exc()
-        while True:
+        async for msg in result:
             try:
-                msg = await result.__anext__()
+                if msg != "":
+                    await websocket.send(msg)
+                    # print("oooooo")
                 print(msg)
-                # await websocket.send("hohohoho")
-                await websocket.send(msg)
-                # await asyncio.sleep(0.1)
+                # await websocket.send("hi")
+                # await asyncio.sleep(1)
             except Exception as e:
                 print(e)
                 traceback.print_exc()
+                break
+        # while True:
+        #     try:
+        #         msg = await result.__anext__()
+        #         print(msg)
+        #         # await websocket.send("hohohoho")
+        #         await websocket.send(msg)
+        #         # await asyncio.sleep(0.1)
+        #     except Exception as e:
+        #         print(e)
+        #         traceback.print_exc()
 
     # async def test():
     #     result = translator()
