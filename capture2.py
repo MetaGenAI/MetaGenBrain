@@ -1,7 +1,7 @@
 import logging
 import collections, queue, os, os.path
 import numpy as np
-import pyaudio
+#import pyaudio
 import wave
 import webrtcvad
 from halo import Halo
@@ -27,9 +27,11 @@ def make_iter():
     return queue, put
 
 def main(source_lang, target_lang):
+    #folder = "C:/Program Files (x86)/Steam/steamapps/common/NeosVR/data/tmp/"
+    folder = "/home/guillefix/.steam/steamapps/common/NeosVR/data/tmp/"
     # Start audio with VAD
     async def translator():
-        async for file in transcribe.transcribe_tokenizer_folder("C:/Program Files (x86)/Steam/steamapps/common/NeosVR/data/tmp/"):
+        async for file in transcribe.transcribe_tokenizer_folder(folder):
             # naming convention - ID2C00_voice_tmp_[guid].wav
             # if file is not None:
             # username = str(file).split("_voice_")[0]
