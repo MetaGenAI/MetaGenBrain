@@ -10,7 +10,7 @@ import websockets
 import asyncio
 import traceback
 import transcribe
-import translate
+# import translate
 # import punctuate
 
 logging.basicConfig(level=20)
@@ -18,6 +18,10 @@ logging.basicConfig(level=20)
 logger = logging.getLogger('websockets')
 logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler())
+
+import os
+import openai
+openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 def make_iter():
     loop = asyncio.get_event_loop()
@@ -28,8 +32,7 @@ def make_iter():
 
 def main(source_lang, target_lang):
     # folder = "C:/Program Files (x86)/Steam/steamapps/common/NeosVR/data/tmp/"
-    #folder = "/home/guillefix/.steam/steamapps/common/NeosVR/data/tmp/"
-    folder = "/root/NeosVR/data/tmp/"
+    folder = "/home/guillefix/.steam/steamapps/common/NeosVR/data/tmp/"
     # Start audio with VAD
     async def translator():
         async for file in transcribe.transcribe_tokenizer_folder(folder):
@@ -39,8 +42,9 @@ def main(source_lang, target_lang):
             # text = transcribe.transcribe_tokenizer(file)
             try:
                 text = transcribe.transcribe_google(file)
-                translation = translate.translate(text, source_lang, target_lang)
-                yield text
+                # ehm, do stuff with text if u want
+                completion = openai.Completion.create(engine="ada", prompt="I am a very clever chatbot. \n. You: "+text+"\nMe:")
+                yield text+"\n"+"<color=blue>"+completion.choices[0].text.split("\n")[0]+"</color>"
             except Exception as e:
                 print(e)
                 yield ""
