@@ -28,7 +28,8 @@ def make_iter():
 
 def main(source_lang, target_lang):
     # folder = "C:/Program Files (x86)/Steam/steamapps/common/NeosVR/data/tmp/"
-    folder = "/home/guillefix/.steam/steamapps/common/NeosVR/data/tmp/"
+    #folder = "/home/guillefix/.steam/steamapps/common/NeosVR/data/tmp/"
+    folder = "/root/NeosVR/data/tmp/"
     # Start audio with VAD
     async def translator():
         async for file in transcribe.transcribe_tokenizer_folder(folder):
