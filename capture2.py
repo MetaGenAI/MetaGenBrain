@@ -39,7 +39,7 @@ def main(source_lang, target_lang):
             # text = transcribe.transcribe_tokenizer(file)
             try:
                 text = transcribe.transcribe_google(file)
-                translation = translate.translate(text, source_lang, target_lang)
+                ##translation = translate.translate(text, source_lang, target_lang)
                 yield text
             except Exception as e:
                 print(e)
